@@ -2,6 +2,7 @@ import userModel from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+// POST /auth/register
 export const authUser = async (req, res) => {
   try {
     const {
@@ -66,6 +67,7 @@ export const authUser = async (req, res) => {
   }
 };
 
+// POST /auth/login
 export const loginUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -116,4 +118,12 @@ export const loginUser = async (req, res) => {
     console.error("Error in loginUser:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
+};
+
+// getUser - here
+export const getUser = (req, res) => {
+  return res.status(200).json({
+    message: "user fetched successfully",
+    user: req.user,
+  });
 };

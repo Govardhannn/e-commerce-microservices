@@ -4,12 +4,11 @@ import userModel from "../models/user.model.js";
 
 describe("/api/auth/register", () => {
 
-  // ✅ isolate tests
   beforeEach(async () => {
-    await userModel.deleteMany();
+    await userModel.deleteMany(); // keeps tests isolated
   });
 
-  it("should register a user successfully", async () => {
+  it("should register a user successfully and return 201", async () => {
 
     const response = await request(app)
       .post("/api/auth/register")
@@ -23,19 +22,21 @@ describe("/api/auth/register", () => {
         }
       });
 
-    // ✅ check status
+    // ✅ status check
     expect(response.status).toBe(201);
 
-    // ✅ check response body
+    // ✅ response structure
     expect(response.body).toHaveProperty("user");
+
+    // ✅ correct email returned
     expect(response.body.user.email).toBe("test@test.com");
 
-    // ✅ verify user saved in DB
+    // ✅ confirm user saved in DB
     const user = await userModel.findOne({ email: "test@test.com" });
 
     expect(user).not.toBeNull();
 
-    // ✅ password should NOT be plain text
+    // ✅ password should be hashed
     expect(user.password).not.toBe("testpassword");
   });
 
