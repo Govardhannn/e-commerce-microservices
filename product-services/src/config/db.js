@@ -1,0 +1,12 @@
+import mongoose from "mongoose";
+
+export const productDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      dbName: "e-commerce-product-service",
+    });
+    console.log(`Database connected sucessfully`);
+  } catch (error) {
+    console.log(`Databse connection fails`, error);
+  }
+};
