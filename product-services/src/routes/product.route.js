@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { createProduct } from "../controllers/product.controller.js";
+import { createProduct, getProducts } from "../controllers/product.controller.js";
 import createAuthMiddleware from "../middleware/auth.middleware.js";
 import createProductValidators from "../validators/product.validation.js";
 const router = express.Router();
@@ -15,5 +15,9 @@ router.post(
   createProductValidators,
   createProduct,
 );
+
+router.get('/',getProducts )
+
+// router.get('/:id',)
 
 export default router;

@@ -35,7 +35,8 @@ const productSchema = new mongoose.Schema({
     default: 0,
   },
 });
-
+// to make the query fast 
+productSchema.index({ title: "text", description: "text" });
 const productModel = mongoose.model("Product", productSchema);
 
 export default productModel;
