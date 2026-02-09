@@ -1,8 +1,16 @@
 import express from "express";
 import multer from "multer";
-import { createProduct, getProducts } from "../controllers/product.controller.js";
+import {
+  createProduct,
+  deleteProduct,
+  getProductById,
+  getProducts,
+  getProductsBYSeller,
+  updateProduct,
+} from "../controllers/product.controller.js";
 import createAuthMiddleware from "../middleware/auth.middleware.js";
 import createProductValidators from "../validators/product.validation.js";
+import { get } from "mongoose";
 const router = express.Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -16,8 +24,16 @@ router.post(
   createProduct,
 );
 
-router.get('/',getProducts )
+router.get("/", getProducts);
 
-// router.get('/:id',)
+router.patch("/:id", createAuthMiddleware(["seller"]), updateProduct);
 
+router.get("/:id", createAuthMiddleware(["seller"]), deleteProduct);
+
+router.get('/seller' , createAuthMiddleware , getProductsBYSeller)
+
+
+// writing this down becz this will treat the /seller - it own part if written above
+
+router.get('/:id', getProductById)
 export default router;
