@@ -1,16 +1,47 @@
-import express from "express"
-import { loginUserValidations, registerUserValidations } from "../middleware/validator.middleware.js";
-import { authUser, getUser, loginUser } from "../controllers/auth.controller.js";
+import express from "express";
+
+import {
+  registerUserValidations,
+  loginUserValidations,
+  addUserAddressValidations,
+} from "../middleware/validator.middleware.js";
+
+import {
+  authUser,
+  loginUser,
+  logoutUser,
+  getUser,
+  getUserAddresses,
+  addUserAddress,
+  deleteUserAddress,
+} from "../controllers/auth.controller.js";
+
 import { authMiddleware } from "../middleware/auth.middleware.js";
+
 const router = express.Router();
 
+// auth
+router.post("/register", registerUserValidations, authUser);
+router.post("/login", loginUserValidations, loginUser);
+router.post("/logout", authMiddleware, logoutUser);
 
+// user
+router.get("/users/me", authMiddleware, getUser);
 
-router.post('/register', registerUserValidations , authUser)
+// addresses
+router.get("/users/me/addresses", authMiddleware, getUserAddresses);
 
-router.post('/login',loginUserValidations, loginUser)
+router.post(
+  "/users/me/addresses",
+  authMiddleware,
+  addUserAddressValidations,
+  addUserAddress,
+);
 
-router.get('/profile', authMiddleware , getUser)
+router.delete(
+  "/users/me/addresses/:addressId",
+  authMiddleware,
+  deleteUserAddress,
+);
 
-router.get('/logout', loginUser)
 export default router;
