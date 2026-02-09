@@ -1,6 +1,7 @@
 import userModel from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import redis from "../config/redis.js";
 
 // POST /auth/register
 export const authUser = async (req, res) => {
@@ -125,5 +126,25 @@ export const getUser = (req, res) => {
   return res.status(200).json({
     message: "user fetched successfully",
     user: req.user,
+  });
+};
+
+// Logout user - herer
+
+export const logoutUser = async (req, res) => {
+
+  const token = req.cookies?.token;
+
+  if (token) {
+    await redis.set(`blacklist:${token}`, "true", "EX", 24 * 60 * 60);
+  }
+
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+  });
+
+  return res.status(200).json({
+    message: "Logged out seccessfully",
   });
 };

@@ -2,7 +2,7 @@ import request from "supertest";
 import app from "../app.js";
 import userModel from "../models/user.model.js";
 
-describe("/api/auth/register", () => {
+describe("/api/auth/login", () => {
 
   beforeEach(async () => {
     await userModel.deleteMany(); // keeps tests isolated

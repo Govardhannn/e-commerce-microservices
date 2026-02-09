@@ -11,4 +11,6 @@ router.post('/register', registerUserValidations , authUser)
 router.post('/login',loginUserValidations, loginUser)
 
 router.get('/profile', authMiddleware , getUser)
+
+router.get('/logout', loginUser)
 export default router;
