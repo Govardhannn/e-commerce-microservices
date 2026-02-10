@@ -7,6 +7,6 @@ app.use(express.json())
 app.use(cookieParser())
 
 
-app.use('/cart/product', router)
+app.use('/api/cart', router)
 
 export default app;

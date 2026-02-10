@@ -5,7 +5,9 @@ const cartSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
+      index: true, // ⭐ VERY IMPORTANT for fast lookups
     },
+
     items: [
       {
         productId: {
@@ -20,9 +22,10 @@ const cartSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-const cartModel = mongoose.model("cart", cartSchema);
+// ⭐ Use Capital Model Name (industry convention)
+const Cart = mongoose.model("Cart", cartSchema);
 
-export default cartModel;
+export default Cart;

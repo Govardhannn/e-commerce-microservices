@@ -1,12 +1,17 @@
 import jwt from "jsonwebtoken";
 
-export default function createAuthMiddleware(roles = ["user"]) {
-  return function authMiddleware(req, res, next) {
+const createAuthMiddleware = (roles = ["user"]) => {
+  return (req, res, next) => {
+
+    // ✅ safer token extraction
+    const authHeader = req.headers.authorization;
+
     const token =
       req.cookies?.token ||
-      (authHeader && authHeader.startsWith("Bearer ")
+      (authHeader?.startsWith("Bearer ")
         ? authHeader.split(" ")[1]
         : null);
+
     if (!token) {
       return res.status(401).json({
         message: "Unauthorized: No token provided",
@@ -16,6 +21,7 @@ export default function createAuthMiddleware(roles = ["user"]) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+      // ✅ role check
       if (!roles.includes(decoded.role)) {
         return res.status(403).json({
           message: "Forbidden: Insufficient permissions",
@@ -24,10 +30,21 @@ export default function createAuthMiddleware(roles = ["user"]) {
 
       req.user = decoded;
       next();
-    } catch (err) {
+
+    } catch (error) {
+
+      // ⭐ Better error messaging
+      if (error.name === "TokenExpiredError") {
+        return res.status(401).json({
+          message: "Unauthorized: Token expired",
+        });
+      }
+
       return res.status(401).json({
         message: "Unauthorized: Invalid token",
       });
     }
   };
-}
+};
+
+export default createAuthMiddleware;

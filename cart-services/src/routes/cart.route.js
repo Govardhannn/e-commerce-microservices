@@ -4,32 +4,39 @@ import {
   addItemToCart,
   getCart,
   updateItemQuantity,
-} from "../controllers/cart.controler.js";
+} from "../controllers/cart.controller.js";
+
 import {
   validateAddItemToCart,
   validateUpdateCartItem,
 } from "../middleware/validator.middleware.js";
 
 const router = express.Router();
-// post items with the middlware with validiation
-router.post(
-  "/items",
-  validateAddItemToCart,
+
+
+// ✅ GET CART
+router.get(
+  "/",
   createAuthMiddleware(["user"]),
-  getCart,
+  getCart
 );
 
+
+// ✅ ADD ITEM
 router.post(
   "/items",
-  validateUpdateCartItem,
-  createAuthMiddleware,
-  addItemToCart,
+  createAuthMiddleware(["user"]),
+  validateAddItemToCart,
+  addItemToCart
 );
 
+
+// ✅ UPDATE ITEM
 router.patch(
   "/items/:productId",
-  validateUpdateCartItem,
   createAuthMiddleware(["user"]),
-  updateItemQuantity,
+  validateUpdateCartItem,
+  updateItemQuantity
 );
+
 export default router;

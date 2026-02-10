@@ -1,18 +1,17 @@
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 dotenv.config();
+
 import app from "./src/app.js";
-import cardDB from "./src/config/db.js";
+import connectDB from "./src/config/db.js";
 
-const port = process.env.PORT || 8000;
+const PORT = process.env.PORT || 4003;
 
+const startServer = async () => {
+  await connectDB();
 
-const connectionString = async () =>{
+  app.listen(PORT, () => {
+    console.log(`✅ Cart service running on port ${PORT}`);
+  });
+};
 
-    await cardDB()
-
-    app.listen(port, ()=>{
-        console.log(`cart server is running port ${port}`)
-    })
-}
-
-connectionString();
+startServer();

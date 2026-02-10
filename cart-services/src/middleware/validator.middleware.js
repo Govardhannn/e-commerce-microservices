@@ -1,20 +1,24 @@
-import mongoose from "mongoose";
 import { body, param, validationResult } from "express-validator";
+import mongoose from "mongoose";
 
-function validateResult(req, res, next) {
+// ✅ central error handler
+const validateResult = (req, res, next) => {
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
     return res.status(400).json({
       errors: errors.array(),
     });
   }
-  next();
-}
 
+  next();
+};
+
+
+// ✅ ADD ITEM VALIDATION
 export const validateAddItemToCart = [
   body("productId")
-    .isString()
-    .withMessage("Product ID must be a string")
+    // ⭐ no need for isString
     .custom((value) => mongoose.Types.ObjectId.isValid(value))
     .withMessage("Invalid Product ID format"),
 
@@ -25,10 +29,10 @@ export const validateAddItemToCart = [
   validateResult,
 ];
 
+
+// ✅ UPDATE ITEM VALIDATION
 export const validateUpdateCartItem = [
   param("productId")
-    .isString()
-    .withMessage("Product ID must be a string")
     .custom((value) => mongoose.Types.ObjectId.isValid(value))
     .withMessage("Invalid Product ID format"),
 
