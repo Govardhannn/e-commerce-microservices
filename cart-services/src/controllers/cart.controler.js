@@ -47,3 +47,22 @@ export const addItemToCart = async (req, res) => {
     cart,
   });
 };
+
+export const updateItemQuantity = async (req, res) => {
+  const { productId } = req.params;
+  const { qty } = req.body;
+  const user = req.user;
+  const cart = await cartModel.findOne({ user: user.id });
+  if (!cart) {
+    return res.status(404).json({ message: "Cart not found" });
+  }
+  const existingItemIndex = cart.items.findIndex(
+    (item) => item.productId.toString() === productId,
+  );
+  if (existingItemIndex < 0) {
+    return res.status(404).json({ message: "Item not found" });
+  }
+  cart.items[existingItemIndex].quantity = qty;
+  await cart.save();
+  res.status(200).json({ message: "Item updated", cart });
+};
