@@ -10,7 +10,7 @@ import {
 } from "../controllers/product.controller.js";
 import createAuthMiddleware from "../middleware/auth.middleware.js";
 import createProductValidators from "../validators/product.validation.js";
-import { get } from "mongoose";
+
 const router = express.Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -23,13 +23,13 @@ router.post("/",
   createProductValidators,
   createProduct
 );
-
+  /// - Working - Fine 
 router.get("/", getProducts);
 
 router.patch("/:id", createAuthMiddleware(["seller"]), updateProduct);
 
 router.delete("/:id", createAuthMiddleware(["seller"]), deleteProduct);
-
+  /// - Working - Fine 
 router.get("/seller", createAuthMiddleware([ "seller" ]), getProductsBYSeller);
 
 // writing this down becz this will treat the /seller - it own part if written above

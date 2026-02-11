@@ -101,7 +101,8 @@ export const updateProduct = async (req, res) => {
       .json({ message: "Forbidden: You can only update your own products" });
   }
 
-  const allowedUpdates = ["title", "description", "price"];
+const allowedUpdates = ["title", "description", "price" ];
+
   for (const key of Object.keys(req.body)) {
     if (allowedUpdates.includes(key)) {
       if (key === "price" && typeof req.body.price === "object") {

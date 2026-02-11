@@ -28,7 +28,7 @@ router.post("/logout", authMiddleware, logoutUser);
 // user - working - fine
 router.get("/users/me", authMiddleware, getUser);
 
-// addresses 
+// addresses   -- working - fine
 router.get("/users/me/addresses", authMiddleware, getUserAddresses);
 
 // - working - fine

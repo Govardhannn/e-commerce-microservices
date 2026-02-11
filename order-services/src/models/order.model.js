@@ -1,23 +1,29 @@
 import mongoose from "mongoose";
 
-const addressSchema = new mongoose.Schema({
-  street: String,
-  city: String,
-  state: String,
-  zip: String,
-  country: String,
-});
+const addressSchema = new mongoose.Schema(
+  {
+    street: String,
+    city: String,
+    state: String,
+    zip: String,
+    country: String,
+  },
+  { _id: false }
+);
 
 const orderSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
       required: true,
     },
+
     items: [
       {
         product: {
           type: mongoose.Schema.Types.ObjectId,
+          ref: "product",
           required: true,
         },
         quantity: {
@@ -32,16 +38,19 @@ const orderSchema = new mongoose.Schema(
           },
           currency: {
             type: String,
-            required: true,
             enum: ["USD", "INR"],
+            default: "INR",
           },
         },
       },
     ],
+
     status: {
       type: String,
       enum: ["PENDING", "CONFIRMED", "CANCELLED", "SHIPPED", "DELIVERED"],
+      default: "PENDING",
     },
+
     totalPrice: {
       amount: {
         type: Number,
@@ -49,18 +58,22 @@ const orderSchema = new mongoose.Schema(
       },
       currency: {
         type: String,
-        required: true,
         enum: ["USD", "INR"],
+        default: "INR",
       },
     },
+
     shippingAddress: {
       type: addressSchema,
       required: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-const orderModel = mongoose.model("order", orderSchema);
+// ⭐ Performance
+orderSchema.index({ user: 1 });
+
+const orderModel = mongoose.model("Order", orderSchema);
 
 export default orderModel;

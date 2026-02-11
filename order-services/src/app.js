@@ -1,14 +1,17 @@
-import cookieParser from "cookie-parser";
 import express from "express";
-import router from "./routes/order.route.js";
+import cookieParser from "cookie-parser";
+import router from "./routes/order.routes.js";
 
 const app = express();
-
 app.use(express.json());
 app.use(cookieParser());
 
-
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Order service is running",
+  });
+});
 
 app.use("/api/orders", router);
 
-export default app;
+export default  app;

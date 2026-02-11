@@ -1,17 +1,20 @@
-import dotenv from "dotenv";
-dotenv.config();
+import dotenv from "dotenv"
+import connectDB from "./src/db/db.js";
 import app from "./src/app.js";
-// import orderDB from "./src/config/db.js";
+dotenv.config();
 
 
 const port = process.env.PORT || 8004;
 
-const connectionString = async () => {
+connectDB();
 
-    // await orderDB()
-  app.listen(port, () => {
-    console.log(`order servies is running on the ${port}`);
-  });
-};
+
+const connectionString = async () =>{
+ await connectDB()
+
+    app.listen(port, () => {
+    console.log(`Order service is running on port ${port}`);
+})
+}
 
 connectionString();
