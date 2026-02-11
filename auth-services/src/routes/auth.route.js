@@ -20,17 +20,18 @@ import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-// auth
+// auth  - working - fine
 router.post("/register", registerUserValidations, authUser);
 router.post("/login", loginUserValidations, loginUser);
 router.post("/logout", authMiddleware, logoutUser);
 
-// user
+// user - working - fine
 router.get("/users/me", authMiddleware, getUser);
 
-// addresses
+// addresses 
 router.get("/users/me/addresses", authMiddleware, getUserAddresses);
 
+// - working - fine
 router.post(
   "/users/me/addresses",
   authMiddleware,

@@ -13,30 +13,23 @@ import {
 
 const router = express.Router();
 
-
 // ✅ GET CART
-router.get(
-  "/",
-  createAuthMiddleware(["user"]),
-  getCart
-);
-
+router.get("/", createAuthMiddleware(["user"]), getCart);
 
 // ✅ ADD ITEM
 router.post(
   "/items",
   createAuthMiddleware(["user"]),
   validateAddItemToCart,
-  addItemToCart
+  addItemToCart,
 );
-
 
 // ✅ UPDATE ITEM
 router.patch(
   "/items/:productId",
   createAuthMiddleware(["user"]),
   validateUpdateCartItem,
-  updateItemQuantity
+  updateItemQuantity,
 );
 
 export default router;

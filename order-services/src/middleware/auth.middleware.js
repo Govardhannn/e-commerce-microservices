@@ -2,11 +2,16 @@ import jwt from "jsonwebtoken";
 
 export default function createAuthMiddleware(roles = ["user"]) {
   return function authMiddleware(req, res, next) {
+
+    // ✅ DEFINE authHeader FIRST
+    const authHeader = req.headers.authorization;
+
     const token =
       req.cookies?.token ||
-      (authHeader && authHeader.startsWith("Bearer ")
+      (authHeader?.startsWith("Bearer ")
         ? authHeader.split(" ")[1]
         : null);
+
     if (!token) {
       return res.status(401).json({
         message: "Unauthorized: No token provided",
@@ -24,6 +29,7 @@ export default function createAuthMiddleware(roles = ["user"]) {
 
       req.user = decoded;
       next();
+
     } catch (err) {
       return res.status(401).json({
         message: "Unauthorized: Invalid token",

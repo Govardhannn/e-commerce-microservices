@@ -16,24 +16,23 @@ const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 // POST /api/products
-router.post(
-  "/",
+
+router.post("/",
   createAuthMiddleware(["admin", "seller"]),
   upload.array("images", 5),
   createProductValidators,
-  createProduct,
+  createProduct
 );
 
 router.get("/", getProducts);
 
 router.patch("/:id", createAuthMiddleware(["seller"]), updateProduct);
 
-router.get("/:id", createAuthMiddleware(["seller"]), deleteProduct);
+router.delete("/:id", createAuthMiddleware(["seller"]), deleteProduct);
 
-router.get('/seller' , createAuthMiddleware , getProductsBYSeller)
-
+router.get("/seller", createAuthMiddleware([ "seller" ]), getProductsBYSeller);
 
 // writing this down becz this will treat the /seller - it own part if written above
 
-router.get('/:id', getProductById)
+router.get("/:id", getProductById);
 export default router;
