@@ -1,6 +1,7 @@
 import express from "express";
 import createAuthMiddleware from "../middleware/auth.middleware.js";
-import { createPayment } from "../controllers/payment.controller.js";
+import { createPayment, verifyPayment } from "../controllers/payment.controller.js";
+
 
 const paymentRoute = express.Router();
 
@@ -10,5 +11,7 @@ paymentRoute.post(
   createAuthMiddleware(["user"]),
   createPayment,
 );
+
+paymentRoute.post('/verify', createAuthMiddleware(['user']), verifyPayment)
 
 export default paymentRoute;
