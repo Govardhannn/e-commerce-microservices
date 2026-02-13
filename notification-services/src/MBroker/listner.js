@@ -58,7 +58,7 @@ Encoding: string
   subscribeToQueue("PAYMENT_NOTIFICATION.PAYMENT_FAILED", async (data) => {
     const emailHTMLTemplate = `
         <h1>Payment Failed</h1>
-        <p>Dear ${},</p>
+        <p>Dear ${data.username},</p>
         <p>Unfortunately, your payment for the order ID: ${data.orderId} has failed.</p>
         <p>Please try again or contact support if the issue persists.</p>
         <p>Best regards,<br/>The Team</p>
