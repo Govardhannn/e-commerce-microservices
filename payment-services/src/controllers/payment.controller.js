@@ -5,6 +5,8 @@ dotenv.config();
 import Razorpay from "razorpay";
 import { validatePaymentVerification } from "../../node_modules/razorpay/dist/utils/razorpay-utils.js";
 
+import { publishToQueue } from "../broker/broker.js";
+
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
@@ -95,7 +97,7 @@ export const verifyPayment = async (req, res) => {
   }
 } */
       }
-    } // this data from the payment done  - if error check the details here 
+    } // this data from the payment done  - if error check the details here
 
     if (!isValid) {
       return res.status(400).json({ message: "Invalid signature" });
@@ -115,10 +117,40 @@ export const verifyPayment = async (req, res) => {
     payment.status = "COMPLETED";
 
     await payment.save();
+    // connecting Here it to the Notification service after Payment sucessfull
+    await publishToQueue("PAYMENT_NOTIFICATION.PAYMENT_COMPLETED", {
+      email: req.user.email,
+      orderId: payment.order,
+      paymentId: payment.paymentId,
+      amount: payment.price.amount / 100,
+      currency: payment.price.currency,
+      fullName: req.user.fullName,
+    });
+
+    await publishToQueue("PAYMENT_SELLER_DASHBOARD.PAYMENT_UPDATED", payment);
+    /// -- till here Notification
 
     res.status(200).json({ message: "Payment verified successfully", payment });
   } catch (err) {
     console.log("Errror message:", err);
+
+    // Notification - if Payment is Fails 
+    // Receivied - Paymet notification proof - 
+    {/* 
+       code: 'EENVELOPE',
+  response: '530-5.7.0 Authentication Required. For more information, go to\n' +
+    '530 5.7.0  https://support.google.com/accounts/troubleshooter/2402620. 98e67ed59e1d1-356a87158e4sm1731368a91.3 - gsmtp',
+  responseCode: 530,
+  command: 'MAIL FROM'
+      Receiving
+      */}
+
+    await publishToQueue("PAYMENT_NOTIFICATION.PAYMENT_FAILED", {
+      email: req.user.email,
+      paymentId: paymentId,
+      orderId: razorpayOrderId,
+      fullName: req.user.fullName,
+    });
 
     return res.status(500).json({ message: "Internal Server Error" });
   }
