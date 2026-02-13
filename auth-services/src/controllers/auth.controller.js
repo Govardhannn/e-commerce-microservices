@@ -2,7 +2,7 @@ import userModel from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import redis from "../config/redis.js";
-
+import { publishToQueue } from "../broker/broker.js";
 // POST /auth/register
 export const authUser = async (req, res) => {
   try {
@@ -34,7 +34,15 @@ export const authUser = async (req, res) => {
       role: role || "user", // default role is 'user'
     });
 
-    const token = jwt.sign(
+    // Publish user create RabbitMQ 
+     await publishToQueue('AUTH_NOTIFICATION.USER_CREATED', {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                fullName: user.fullName,
+            })
+    // this is the part from the notification  services 
+     const token = jwt.sign(
       {
         id: user._id,
         username: user.username,

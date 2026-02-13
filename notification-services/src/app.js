@@ -1,4 +1,5 @@
 import express from 'express'
+// import { subscribeToQueue } from './MBroker/broker.js'
 
 
 
@@ -12,7 +13,11 @@ app.get('/', function (req, res){
 
 
 
-
+// subscribeToQueue('AUTH_NOTIFICATION.USER_CREATED', async (data)=>{
+//     console.log(
+//         'Reseved the data from the Queue' , data
+//     )
+// })
 
 
 export default app;
