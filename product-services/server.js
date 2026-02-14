@@ -5,6 +5,7 @@ const port = process.env.PORT || 8000;
 
 const connctionSting = async () =>{
 
+   
  await productDB()
     app.listen(port, ()=>{
         console.log(`product server is running ${port}`)
