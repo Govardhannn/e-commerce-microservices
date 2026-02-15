@@ -3,19 +3,8 @@ import sendEmail from "../email.js";
 
 export default function () {
 
-  subscribeToQueue("PAYMENT_NOTIFICATION.PAYMENT_INITIATED", async (data) => {
-        const emailHTMLTemplate = `
-        <h1>Payment Initiated</h1>
-        <p>Dear ${data.username},</p>
-        <p>Your payment of ${data.currency} ${data.amount} for the order ID: ${data.orderId} has been initiated.</p>
-        <p>We will notify you once the payment is completed.</p>
-        <p>Best regards,<br/>The Team</p>
-        `;
-        await sendEmail(data.email, "Payment Initiated", "Your payment is being processed", emailHTMLTemplate);
-    }
-)
-// 
-  subscribeToQueue("AUTH_NOTIFICATION.USER_CREATED", async (data) => {
+
+   subscribeToQueue("AUTH_NOTIFICATION.USER_CREATED", async (data) => {
     console.log("Reseved the data from the Queue", data);
 
     // here sending mail with user data      ---- For------ Auth-Services----
@@ -33,6 +22,18 @@ export default function () {
     );
   });
 
+
+  subscribeToQueue("PAYMENT_NOTIFICATION.PAYMENT_INITIATED", async (data) => {
+        const emailHTMLTemplate = `
+        <h1>Payment Initiated</h1>
+        <p>Dear ${data.username},</p>
+        <p>Your payment of ${data.currency} ${data.amount} for the order ID: ${data.orderId} has been initiated.</p>
+        <p>We will notify you once the payment is completed.</p>
+        <p>Best regards,<br/>The Team</p>
+        `;
+        await sendEmail(data.email, "Payment Initiated", "Your payment is being processed", emailHTMLTemplate);
+    }
+)
   /// This form the Payment services is Payment is Success Or Fails
 
   subscribeToQueue("PAYMENT_NOTIFICATION.PAYMENT_COMPLETED", async (data) => {

@@ -34,15 +34,18 @@ export const authUser = async (req, res) => {
       role: role || "user", // default role is 'user'
     });
 
-    // Publish user create RabbitMQ 
-     await publishToQueue('AUTH_NOTIFICATION.USER_CREATED', {
+    // Publish user create RabbitMQ
+   await Promise.all([
+            publishToQueue('AUTH_NOTIFICATION.USER_CREATED', {
                 id: user._id,
                 username: user.username,
                 email: user.email,
                 fullName: user.fullName,
-            })
-    // this is the part from the notification  services 
-     const token = jwt.sign(
+            }),
+            publishToQueue("AUTH_SELLER_DASHBOARD.USER_CREATED", user)
+        ]);
+    // this is the part from the notification  services
+    const token = jwt.sign(
       {
         id: user._id,
         username: user.username,

@@ -1,15 +1,16 @@
 import mongoose from "mongoose"
 
+const sellerDashDb = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      dbName: "e-commerce-Seller-Dashboard-service"
+    });
 
-const sellerDashDb = async () =>{
-   try {
-    mongoose.connect(process.env.MONGO_URI,{
-        dbName: "e-commerce-Seller-Dashboard-service"
-    })
-    console.log("cart database id connected")
-   } catch (error) {
-  console.log("database connection failed")   
-   }
-}
+    console.log("Seller Dashboard DB connected successfully" ,process.env.MONGO_URI );
+  } catch (error) {
+    console.error("Database connection failed:", error.message);
+    process.exit(1); // stop server if DB fails
+  }
+};
 
 export default sellerDashDb;
