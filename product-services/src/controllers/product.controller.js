@@ -33,7 +33,7 @@ export const createProduct = async (req, res) => {
         });
 
     return res.status(201).json({
-      message: "Product created",
+      message: "Product created", 
       data: product,
     });
   } catch (err) {

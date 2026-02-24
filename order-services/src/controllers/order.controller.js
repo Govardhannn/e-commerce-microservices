@@ -1,5 +1,7 @@
 import axios from "axios";
 import orderModel from "../models/order.model.js";
+import { publishToQueue } from "../broker/broker.js";
+
 
 export const createOrder = async (req, res) => {
   const user = req.user;
@@ -70,6 +72,7 @@ export const createOrder = async (req, res) => {
         country: req.body.shippingAddress.country,
       },
     });
+    await publishToQueue("ORDER_SELLER_DASHBOARD.ORDER_CREATED", order)
 
     res.status(201).json({ order });
   } catch (err) {
